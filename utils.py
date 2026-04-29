@@ -11,6 +11,7 @@ from datetime import datetime, time, timedelta
 
 import aiohttp
 
+import state
 from config import (
     USER_TOKEN,
     GROUP_ID,
@@ -19,7 +20,7 @@ from config import (
     CLIP_DESCRIPTION,
     CLEANUP_INTERVAL_HOURS,
     POSTING_INTERVAL,
-    LAST_TIME_POST,
+    LAST_TIME_POST_DEFAULT,
     USE_YTDLP,
     YTDLP_PATH
 )
@@ -78,7 +79,7 @@ async def post_clip_to_wall():
     Публицакия клипов на стене группы
     """
 
-    if (datetime.now() - LAST_TIME_POST >= timedelta(hours = POSTING_INTERVAL)):
+    if (datetime.now() - state.get_last_time_post(LAST_TIME_POST_DEFAULT) >= timedelta(hours=POSTING_INTERVAL)):
         clip_path = get_random_clip()
         print(f"Выбран клип для загрузки: {clip_path}")
 
@@ -92,15 +93,7 @@ async def post_clip_to_wall():
                 wallpost=True
             )
             os.remove(clip_path)
-            with open('config.py', 'r+') as f:
-                lines = f.readlines()
-                f.seek(0)
-                for line in lines:
-                    if line.startswith('LAST_TIME_POST'):
-                        f.write(f"LAST_TIME_POST = datetime({datetime.now().year}, {datetime.now().month}, {datetime.now().day}, {datetime.now().hour}, {datetime.now().minute}, {datetime.now().second})\n")
-                    else:
-                        f.write(line)
-                f.truncate()
+            state.set_last_time_post(datetime.now())
             logger.info(f"Клип успешно опубликован на стене сообщества (ID группы: {GROUP_ID}).")
         except Exception as e:
             logger.error("Ошибка при загрузке клипа на стену: %s", e)

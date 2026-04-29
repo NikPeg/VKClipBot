@@ -24,8 +24,8 @@ END: str = f"{END_HOUR}:{END_MINUTE}"
 POSTING_INTERVAL: int = int(os.getenv("POSTING_INTERVAL", "1"))
 CLEANUP_INTERVAL_HOURS: int = int(os.getenv("CLEANUP_INTERVAL_HOURS", "24"))
 
-LAST_TIME_POST: datetime = datetime.strptime(
-    os.getenv("LAST_TIME_POST", "2025-06-16 21:25:30"), "%Y-%m-%d %H:%M:%S"
+LAST_TIME_POST_DEFAULT: datetime = datetime.strptime(
+    os.getenv("LAST_TIME_POST_DEFAULT", "2025-06-16 21:25:30"), "%Y-%m-%d %H:%M:%S"
 )
 
 LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")

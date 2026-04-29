@@ -4,3 +4,6 @@ clips/
 __pycache__/
 *.pyc
 *.pyo
+.git/
+.gitignore
+scripts/
