@@ -33,7 +33,7 @@ python bot.py
 | Переменная | Описание |
 |---|---|
 | `BOT_TOKEN` | Токен группы |
-| `USER_TOKEN` | Токен владельца |
+| `USER_TOKEN` | Токен владельца ([как получить](docs/get-user-token.md)) |
 | `GROUP_ID` | ID группы |
 | `CONVERSATION_IDS` | ID бесед через запятую |
 | `CLIP_DESCRIPTION` | Описание клипа при публикации |
