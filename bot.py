@@ -81,49 +81,31 @@ async def message_handler(message: Message):
         if peer_id not in CONVERSATION_IDS:
             return
         
-        
-        # Подробное логирование входящего сообщения
-        logger.info(f"Получено новое сообщение: {message.text}")
-        logger.info(f"От пользователя: {message.from_id}, Peer ID: {message.peer_id}, CONVERSATION_ID: {CONVERSATION_IDS}")
-        logger.info("Сообщение из целевой беседы, продолжаем обработку")
-            
         # Проверяем наличие вложений
         if not message.attachments:
             return
         
-        # Логируем все вложения с подробной информацией
-        logger.info(f"Количество вложений: {len(message.attachments)}")
-        for i, att in enumerate(message.attachments):
-            logger.info(f"Вложение {i+1}: Тип = {att.type}, Строковое представление = {str(att.type)}")
-            
         # Обрабатываем вложения
         for attachment in message.attachments:
             # Расширенная проверка типа вложения
             attachment_type_str = str(attachment.type)
-            logger.info(f"Проверка вложения: {attachment_type_str}")
             
             # Проверяем наличие слова "video" в строковом представлении типа
             if "video" not in attachment_type_str.lower():
-                logger.info(f"Вложение типа {attachment_type_str} не содержит 'video', пропускаем")
                 continue
-            
-            logger.info(f"Найдено видео-вложение: {attachment_type_str}")
                 
             try:
                 # Получаем данные видео
                 video_data = attachment.video
-                logger.info(f"Данные видео: owner_id={video_data.owner_id}, id={video_data.id}, title={video_data.title}")
+                logger.info(f"Найдено видео-вложение: owner_id={video_data.owner_id}, id={video_data.id}, title={video_data.title}")
                 
                 # Формируем URL видео для yt-dlp
                 video_url = get_vk_video_url(video_data.owner_id, video_data.id)
-                logger.info(f"Сформирован URL видео для yt-dlp: {video_url}")
                 
                 # Генерируем имя файла для сохранения
                 filename = generate_filename()
-                logger.info(f"Сгенерировано имя файла: {filename}")
                 
                 # Загружаем видео с использованием yt-dlp
-                logger.info(f"Начинаем загрузку видео")
                 success = await download_clip(video_url, filename)
                 
                 if success:
